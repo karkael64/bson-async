@@ -85,6 +85,7 @@ class BSON {
         return this;
     }
 
+
     /**
      * @method get is used to get current row field value, or send undefined if not found.
      * @param name
@@ -94,6 +95,7 @@ class BSON {
     get(name) {
         return this.data[name];
     }
+
 
     /**
      * @method set is used to set row field value.
@@ -129,7 +131,7 @@ class BSON {
 
 
     /**
-     * @method update is used to seek each rows and set them in third parameter of ${each} function
+     * @method update is used to seek each rows and set them in third parameter of ${each} function.
      * @param each function( Error err, Object data, Function push )
      * @return BSON
      */
@@ -185,6 +187,12 @@ class BSON {
         return max;
     }
 
+
+    /**
+     * @method getFile is used to get the file associated.
+     * @returns {File}
+     */
+
     static getFile() {
         return File.build(BSON.FOLDER + this.name.toLowerCase() + '.bson');
     }
@@ -193,5 +201,7 @@ class BSON {
 BSON.FOLDER = 'C:/www/motor-js/data/';
 BSON.UPDATE_REMOVE = undefined;
 BSON.UPDATE_IGNORE = null;
+
+BSON.File = File;
 
 module.exports = BSON;
