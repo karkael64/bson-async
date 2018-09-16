@@ -1,0 +1,29 @@
+{
+  "name": "bson-async",
+  "version": "1.0.0",
+  "description": "Read/write files bson encoded",
+  "main": "bson.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karkael64/bson-async.git"
+  },
+  "keywords": [
+    "Bson",
+    "select",
+    "update",
+    "insert",
+    "File",
+    "FileSystem",
+    "read",
+    "write"
+  ],
+  "author": "\"Karkael Haunter\" <karkael@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/karkael64/bson-async/issues"
+  },
+  "homepage": "https://github.com/karkael64/bson-async#readme"
+}
