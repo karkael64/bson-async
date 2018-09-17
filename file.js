@@ -242,13 +242,13 @@ class File {
         if (is_function(each)) {
             let path = this.path + '_temp',
                 temp = await this.rename(path),
-                cache = [];
+                cache = [],
+                count = 0;
 
-            await temp.readEachLine(function(line){
+            temp.readEachLine(function(line){
                 cache.push(line);
+                count++;
             });
-
-            let count = cache.length;
 
             await this.writeEachLine(async function(){
                 return await each(cache.shift());

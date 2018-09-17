@@ -141,8 +141,6 @@ class BSON {
             let file = this.getFile();
             await file.replaceEachLine(async function (line) {
                 let data = await each(JSON.parse(line));
-                if (data === BSON.UPDATE_REMOVE)
-                    return undefined;
                 if (data === BSON.UPDATE_IGNORE)
                     return line;
                 if (data instanceof BSON)
@@ -199,7 +197,6 @@ class BSON {
 }
 
 BSON.FOLDER = 'C:/www/motor-js/data/';
-BSON.UPDATE_REMOVE = undefined;
 BSON.UPDATE_IGNORE = null;
 
 BSON.File = File;

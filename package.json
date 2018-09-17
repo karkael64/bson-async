@@ -1,6 +1,6 @@
 {
   "name": "bson-async",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Read/write files bson encoded",
   "main": "bson.js",
   "scripts": {
