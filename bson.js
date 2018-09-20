@@ -88,7 +88,7 @@ class BSON {
 
     /**
      * @method get is used to get current row field value, or send undefined if not found.
-     * @param name
+     * @param name {string}
      * @returns {*}
      */
 
@@ -99,8 +99,8 @@ class BSON {
 
     /**
      * @method set is used to set row field value.
-     * @param name
-     * @param value
+     * @param name {string}
+     * @param value {*}
      * @returns {BSON}
      */
 
@@ -114,32 +114,32 @@ class BSON {
 
     /**
      * @method select is used to seek each rows, and then use next as a callback.
-     * @param each function( Error err, Object data, Function then )
-     * @returns BSON
+     * @param each {function({Object})}
+     * @returns {number|null}
      */
 
     static async select(each) {
 
         if (is_function(each)) {
             let file = this.getFile();
-            await file.readEachLine(async function (line) {
+            return await file.readEachLine(async function (line) {
                 await each(JSON.parse(line));
             });
         }
-        return this;
+        return null;
     }
 
 
     /**
      * @method update is used to seek each rows and set them in third parameter of ${each} function.
-     * @param each function( Error err, Object data, Function push )
-     * @return BSON
+     * @param each {function({Object})}
+     * @return {number|null}
      */
 
     static async update(each) {
         if (is_function(each)) {
             let file = this.getFile();
-            await file.replaceEachLine(async function (line) {
+            return await file.replaceEachLine(async function (line) {
                 let data = await each(JSON.parse(line));
                 if (data === BSON.UPDATE_IGNORE)
                     return line;
@@ -148,14 +148,14 @@ class BSON {
                 return JSON.stringify(data);
             });
         }
-        return this;
+        return null;
     }
 
 
     /**
      * @method insert is used to append a row with ${data}, then call ${next} as a callback.
-     * @param data Object
-     * @returns BSON
+     * @param data {Object}
+     * @returns {boolean}
      */
 
     static async insert(data) {
@@ -164,8 +164,11 @@ class BSON {
             let file = this.getFile();
             data.id = await this.nextId();
             await file.append(JSON.stringify(data) + '\n');
+            return true;
         }
-        return this;
+        else {
+            return false;
+        }
     }
 
 
@@ -177,7 +180,7 @@ class BSON {
     static async nextId() {
         let file = this.getFile();
         let max = 1;
-        await file.readEachLine(function(line){
+        await file.readEachLine(function (line) {
             let data = JSON.parse(line);
             if (data.id >= max)
                 max = data.id + 1;
@@ -196,7 +199,7 @@ class BSON {
     }
 }
 
-BSON.FOLDER = 'C:/www/motor-js/data/';
+BSON.FOLDER = __dirname + "/";
 BSON.UPDATE_IGNORE = null;
 
 BSON.File = File;

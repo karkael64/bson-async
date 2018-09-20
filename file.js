@@ -46,7 +46,7 @@ class File {
      */
 
     async read() {
-        return await fs.readFileSync(this.path, {'encoding':'utf8', 'flag':'r'});
+        return await fs.readFileSync(this.path, {'encoding':File.CHARSET, 'flag':'r'});
     }
 
 
@@ -57,7 +57,7 @@ class File {
      */
 
     async write(text) {
-        await fs.writeFileSync(this.path, text);
+        await fs.writeFileSync(this.path, text, {'encoding':File.CHARSET, 'flag':'w'});
         return this;
     }
 
@@ -69,7 +69,7 @@ class File {
      */
 
     async append(text) {
-        await fs.writeFileSync(this.path, text, {'encoding':'utf8', 'flag': 'a'});
+        await fs.writeFileSync(this.path, text, {'encoding':File.CHARSET, 'flag': 'a'});
         return this;
     }
 
@@ -96,7 +96,7 @@ class File {
      */
 
     async size() {
-        let fd = await fs.openSync(this.path, 'r'),
+        let fd = await fs.openSync(this.path, {'encoding':File.CHARSET, 'flag':'r'}),
             stat = await fs.fstatSync(fd);
         await fs.closeSync(fd);
         return stat.size;
@@ -121,7 +121,8 @@ class File {
      */
 
     async unlink() {
-        await fs.unlink(this.path);
+        await fs.unlinkSync(this.path);
+        return this;
     }
 
 
@@ -135,7 +136,7 @@ class File {
 
     async readEachChunk(each, chunk_size) {
         let fd;
-        if (is_function(each) && (fd = await fs.openSync(this.path, 'r'))) {
+        if (is_function(each) && (await this.exists()) && (fd = await fs.openSync(this.path, 'r'))) {
             let stat = await fs.fstatSync(fd),
                 bufferSize = stat.size;
 
@@ -143,7 +144,7 @@ class File {
                 return null;
 
             chunk_size = chunk_size || this.chunk_size;
-            let buffer = new Buffer(chunk_size),
+            let buffer = Buffer.alloc(chunk_size),
                 bytesRead = 0;
 
             let fn = async function () {
@@ -218,9 +219,9 @@ class File {
 
             let fn = async function () {
                 let data = await each();
-                count++;
                 if (is_string(data)) {
-                    await fs.writeSync(fd, data + '\n');
+                    count++;
+                    await fs.writeSync(fd, data + '\n', File.CHARSET);
                     await fn();
                 }
             };
@@ -263,5 +264,6 @@ class File {
 
 File.all = [];
 File.CHUNK_SIZE = 0x10000;
+File.CHARSET = 'utf8';
 
 module.exports = File;
