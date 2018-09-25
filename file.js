@@ -15,7 +15,7 @@ class File {
 
         path = pt.normalize(path);
 
-        Object.defineProperty(this, 'path', {'writable': false, 'value': path});
+        Object.defineProperty(this, 'path', {"enumerable": true, "writable": false, "value": path});
         this.chunk_size = chunk_size || File.CHUNK_SIZE;
 
         File.all[path] = this;
@@ -46,7 +46,7 @@ class File {
      */
 
     async read() {
-        return await fs.readFileSync(this.path, {'encoding':File.CHARSET, 'flag':'r'});
+        return await fs.readFileSync(this.path, {'encoding': File.CHARSET, 'flag': 'r'});
     }
 
 
@@ -57,7 +57,7 @@ class File {
      */
 
     async write(text) {
-        await fs.writeFileSync(this.path, text, {'encoding':File.CHARSET, 'flag':'w'});
+        await fs.writeFileSync(this.path, text, {'encoding': File.CHARSET, 'flag': 'w'});
         return this;
     }
 
@@ -69,7 +69,7 @@ class File {
      */
 
     async append(text) {
-        await fs.writeFileSync(this.path, text, {'encoding':File.CHARSET, 'flag': 'a'});
+        await fs.writeFileSync(this.path, text, {'encoding': File.CHARSET, 'flag': 'a'});
         return this;
     }
 
@@ -96,7 +96,7 @@ class File {
      */
 
     async size() {
-        let fd = await fs.openSync(this.path, {'encoding':File.CHARSET, 'flag':'r'}),
+        let fd = await fs.openSync(this.path, {'encoding': File.CHARSET, 'flag': 'r'}),
             stat = await fs.fstatSync(fd);
         await fs.closeSync(fd);
         return stat.size;
@@ -246,12 +246,12 @@ class File {
                 cache = [],
                 count = 0;
 
-            temp.readEachLine(function(line){
+            temp.readEachLine(function (line) {
                 cache.push(line);
                 count++;
             });
 
-            await this.writeEachLine(async function(){
+            await this.writeEachLine(async function () {
                 return await each(cache.shift());
             });
 

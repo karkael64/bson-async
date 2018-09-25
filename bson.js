@@ -46,7 +46,7 @@ class BSON {
         let id = this.data.id,
             self = this,
             done = false,
-            file = this.getFile();
+            file = this.constructor.getFile();
         if (is_number(id)) {
             await file.readEachLine((line) => {
                 if (!done) {
@@ -71,7 +71,7 @@ class BSON {
     async save() {
         let self = this.data;
         if (this.data.id) {
-            await this.update((data) => {
+            await this.constructor.update((data) => {
                 if (data.id === self.id) {
                     self.sync_date = Date.now();
                     return self;
@@ -79,7 +79,7 @@ class BSON {
             });
         }
         else {
-            await this.insert(self);
+            await this.constructor.insert(self);
             this.sync_date = Date.now();
         }
         return this;
